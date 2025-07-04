@@ -17,7 +17,7 @@ class Estado(TypedDict):
     informacion_recopilada: Optional[dict]
     conversacion_terminada: Optional[bool]
 
-# Prompt en español para RAG
+
 def crear_prompt_espanol():
     template = """
     Eres un asistente especializado en trámites gubernamentales en Colombia. 

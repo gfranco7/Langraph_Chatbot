@@ -11,7 +11,7 @@ if __name__ == "__main__":
     else:
         print("No se encontró el archivo PDF. Asegúrate de que existe:", ruta_pdf)
     
-    print("\n🤖 Iniciando el asistente de trámites...")
+    print("\n- Iniciando el asistente de trámites...")
     flujo = crear_flujo()
     
     estado_inicial = {
@@ -22,4 +22,4 @@ if __name__ == "__main__":
     }
     
     resultado = flujo.invoke(estado_inicial)
-    print(f"\n🎯 Sesión finalizada exitosamente.")
+    print(f"\n- Sesión finalizada exitosamente.")
