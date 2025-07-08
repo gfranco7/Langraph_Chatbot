@@ -26,7 +26,7 @@ class GeminiChat(LLM): #Se hereda la clase base LLM
         **kwargs: Any,
     ) -> str:
         response = self._model.generate_content(prompt)
-        return response.text
+        return response.text    
 
     @property
     def _llm_type(self) -> str:

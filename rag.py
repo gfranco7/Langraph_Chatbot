@@ -21,20 +21,17 @@ def crear_vectorstore_qdrant(ruta_pdf: str):
     print("Conectando con Qdrant...")
     client = QdrantClient(host="localhost", port=6333)
 
-    # Crear la colección
     client.recreate_collection(
         collection_name=COLLECTION_NAME,
         vectors_config=VectorParams(size=384, distance=Distance.COSINE),
     )
 
-    # Crear el vectorstore
     vectorstore = Qdrant(
         client=client,
         collection_name=COLLECTION_NAME,
         embeddings=embeddings,
     )
 
-    # Añadir documentos
     vectorstore.add_documents(docs)
 
     print("Base vectorial cargada correctamente.")

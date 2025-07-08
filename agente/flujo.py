@@ -10,7 +10,7 @@ from modelos.gemini import GeminiChat
 
 COLLECTION_NAME = "tramites"
 
-# Estado compartido con TypedDict (recomendado para LangGraph)
+
 class Estado(TypedDict):
     tramite: Optional[str]
     paso_actual: Optional[str]
@@ -31,6 +31,7 @@ def crear_prompt_espanol():
     Pregunta: {question}
     
     Instrucciones:
+    - No inventes información no existente o no verificada
     - Responde SIEMPRE en español
     - Sé claro y específico
     - Si el contexto no contiene información suficiente, menciona que necesitas más detalles
@@ -54,11 +55,10 @@ def cargar_rag():
         embeddings=embeddings
     )
 
-    modelo = GeminiChat()  # Usamos tu wrapper corregido
+    modelo = GeminiChat() 
     qa = RetrievalQA.from_chain_type(
         llm=modelo, 
         retriever=vectorstore.as_retriever(),
-        # Sin return_source_documents=True para usar .run()
         chain_type_kwargs={
             "prompt": crear_prompt_espanol()
         }
@@ -84,9 +84,8 @@ def preguntar_tramite(state: Estado):
 # Paso 2: Consulta inicial al RAG
 def consultar_info_inicial(state: Estado):
     print(f"\nBuscando información sobre: {state['tramite']}")
-    
     qa = cargar_rag()
-    respuesta = qa.run(state["tramite"])
+    respuesta = qa.invoke(state["tramite"])
     
     print(f"\nInformación encontrada:")
     print("-" * 50)
@@ -104,7 +103,6 @@ def recopilar_datos_usuario(state: Estado):
     
     datos = state.get("informacion_recopilada", {})
     
-    # Preguntas comunes para la mayoría de trámites
     if "nombre" not in datos:
         nombre = input("\n¿Cuál es tu nombre completo? > ").strip()
         datos["nombre"] = nombre
@@ -129,7 +127,6 @@ def recopilar_datos_usuario(state: Estado):
 def consulta_personalizada(state: Estado):
     datos = state["informacion_recopilada"]
     
-    # Crear consulta personalizada
     consulta_personalizada = f"""
     {state['tramite']} en {datos['ciudad']}. 
     Necesito información específica sobre documentos requeridos, costos, 
@@ -185,8 +182,8 @@ def seguimiento_tramite(state: Estado):
             qa = cargar_rag()
             respuesta = qa.run(consulta_contextual)
             
-            print(f"\nRespuesta:")
             print("-" * 40)
+            print(f"\nRespuesta:")
             print(respuesta)
             print("-" * 40)
 
@@ -247,7 +244,6 @@ def crear_flujo():
             "fin": "fin"
         }
     )
-    
     builder.add_conditional_edges(
         "consultar_info_inicial",
         router,
@@ -256,7 +252,6 @@ def crear_flujo():
             "fin": "fin"
         }
     )
-    
     builder.add_conditional_edges(
         "recopilar_datos_usuario",
         router,
@@ -265,7 +260,6 @@ def crear_flujo():
             "fin": "fin"
         }
     )
-    
     builder.add_conditional_edges(
         "consulta_personalizada",
         router,
@@ -274,7 +268,6 @@ def crear_flujo():
             "fin": "fin"
         }
     )
-    
     builder.add_conditional_edges(
         "seguimiento_tramite",
         router,
@@ -283,7 +276,6 @@ def crear_flujo():
             "fin": "fin"
         }
     )
-    
     builder.set_finish_point("fin")
 
     return builder.compile()
