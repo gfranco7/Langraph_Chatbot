@@ -1,0 +1,11 @@
+langgraph
+langchain
+langchain-community
+langchain-core
+qdrant-client
+huggingface-hub
+transformers
+sentence-transformers
+google-generativeai
+python-dotenv
+pypdf
