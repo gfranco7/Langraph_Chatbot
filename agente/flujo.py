@@ -216,7 +216,7 @@ def fin(state: Estado):
     print(f"Ciudad: {datos.get('ciudad', 'N/A')}")
     print(f"Documento: {datos.get('documento', 'N/A')}")
     print("\nSi necesitas más ayuda, puedes ejecutar el programa nuevamente.")
-    print("¡Que tengas un excelente día! 🌟")
+    print("¡Que tengas un excelente día!")
     return state
 
 
